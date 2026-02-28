@@ -1,3 +1,5 @@
+import packageJson from "../../package.json";
+
 export const SMALL_IMG_BASE_URL = "https://image.tmdb.org/t/p/w500";
 export const ORIGINAL_IMG_BASE_URL = "https://image.tmdb.org/t/p/original";
 
@@ -10,12 +12,12 @@ export const MOVIE_CATEGORIES = [
 export const TV_CATEGORIES = ["airing_today", "on_the_air", "top_rated"];
 
 export const servers = [
-  {
-    key: "server1",
-    label: "Server 1",
-    movieUrl: "https://vidsrc.ru/movie/",
-    tvUrl: "https://vidsrc.ru/tv/",
-  },
+  // {
+  //   key: "server1",
+  //   label: "Server 1",
+  //   movieUrl: "https://vidsrc.ru/movie/",
+  //   tvUrl: "https://vidsrc.ru/tv/",
+  // },
   {
     key: "server2",
     label: "Server 2",
@@ -39,10 +41,33 @@ export const servers = [
     label: "Server 5",
     movieUrl: "https://vidrock.net/movie/",
     tvUrl: "https://vidrock.net/tv/",
-  },{
+  },
+  {
     key: "server6",
     label: "Server 6",
     movieUrl: "https://vidsrc.cc/v2/embed/movie/",
     tvUrl: "https://vidsrc.cc/v2/embed/tv/",
+  },
+];
+export const updates = [
+  {
+    version: packageJson.version,
+    // v1.2.1
+    date: "2026-02-28",
+    title: "Search History + Changelog System",
+    description:
+      "Enhanced user experience with persistent search history, dynamic footer versioning, and a dedicated changelog page for tracking updates.",
+
+    updates: `
+  • Implemented Search History system with newest searches appearing first.
+  • Added support for movie, TV, and person history tracking.
+  • Created dedicated FamFlix Changelog page.
+  `,
+
+    bugFixes: `
+  • Corrected MongoDB $push position handling using $each + $position.
+  `,
+
+    active: true,
   },
 ];

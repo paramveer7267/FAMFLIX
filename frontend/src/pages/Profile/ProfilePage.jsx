@@ -4,7 +4,7 @@ import {
   Pencil,
   Film,
   Heart,
-  Settings,
+Info,
   SearchIcon as Search,
 } from "lucide-react";
 import Navbar from "../../components/Navbar";
@@ -135,9 +135,9 @@ const ProfilePage = () => {
             onClick={() => navigate("/watchlist")}
           />
           <ProfileCard
-            icon={<Settings />}
-            label="Settings"
-            onClick={() => navigate("/settings")}
+            icon={<Info />}
+            label="Updates"
+            onClick={() => navigate("/updates")}
           />
           <ProfileCard
             icon={<LogOut />}

@@ -155,52 +155,54 @@ const HistoryPage = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {searchHistory.map((entry) => (
-            <div
-              key={entry.id}
-              className="bg-gray-800 p-4 rounded flex items-center justify-between hover:bg-gray-700 transition hover:scale-105"
-            >
-              <Link
-                to={
-                  entry.searchType === "person"
-                    ? `/actor/movie/${entry.id}/${entry.title}`
-                    : `/watch/${entry.searchType}/${entry.id}`
-                }
-                className="flex flex-grow items-start gap-4"
+            <>
+              <div
+                key={entry.id}
+                className="bg-gray-800 p-4 rounded flex items-center justify-between hover:bg-gray-700 transition hover:scale-105"
               >
-                <img
-                  src={ORIGINAL_IMG_BASE_URL + entry.image}
-                  alt={entry.title}
-                  className="size-10 md:size-16 rounded object-cover flex-shrink-0"
-                />
-                <div className="flex flex-col">
-                  <span className="text-white font-semibold text-sm">
-                    {entry.title}
-                  </span>
-                  <span className="text-gray-400 text-sm">
-                    {formatDate(entry.created)}
-                  </span>
-                </div>
-              </Link>
-
-              <div className="flex items-center gap-2 ml-4">
-                <span
-                  className={`py-2 px-3 min-w-20 text-center rounded-full text-sm ${
-                    entry.searchType === "movie"
-                      ? "bg-blue-600"
-                      : entry.searchType === "tv"
-                      ? "bg-green-600"
-                      : "bg-red-600"
-                  }`}
+                <Link
+                  to={
+                    entry.searchType === "person"
+                      ? `/actor/movie/${entry.id}/${entry.title}`
+                      : `/watch/${entry.searchType}/${entry.id}`
+                  }
+                  className="flex flex-grow items-start gap-4"
                 >
-                  {entry.searchType[0].toUpperCase() +
-                    entry.searchType.slice(1)}
-                </span>
-                <Trash
-                  className="size-5 cursor-pointer hover:fill-red-500 hover:text-gray-100"
-                  onClick={() => openModal(entry, "delete")}
-                />
+                  <img
+                    src={ORIGINAL_IMG_BASE_URL + entry.image}
+                    alt={entry.title}
+                    className="size-10 md:size-16 rounded object-cover flex-shrink-0"
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-white font-semibold text-sm">
+                      {entry.title}
+                    </span>
+                    <span className="text-gray-400 text-sm">
+                      {formatDate(entry.created)}
+                    </span>
+                  </div>
+                </Link>
+
+                <div className="flex items-center gap-2 ml-4">
+                  <span
+                    className={`py-2 px-3 min-w-20 text-center rounded-full text-sm ${
+                      entry.searchType === "movie"
+                        ? "bg-blue-600"
+                        : entry.searchType === "tv"
+                          ? "bg-green-600"
+                          : "bg-red-600"
+                    }`}
+                  >
+                    {entry.searchType[0].toUpperCase() +
+                      entry.searchType.slice(1)}
+                  </span>
+                  <Trash
+                    className="size-5 cursor-pointer hover:fill-red-500 hover:text-gray-100"
+                    onClick={() => openModal(entry, "delete")}
+                  />
+                </div>
               </div>
-            </div>
+            </>
           ))}
         </div>
       </div>

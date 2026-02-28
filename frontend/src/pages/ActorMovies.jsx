@@ -127,7 +127,7 @@ const ActorMovies = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="lg:px-15 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-6 gap-4">
           {searchResults.map((item) => {
             if (!item?.poster_path) return null;
             const imagePath = item?.poster_path;

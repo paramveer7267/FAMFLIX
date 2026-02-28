@@ -37,7 +37,7 @@ const WatchPage = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [episodeNumber, setEpisodeNumber] = useState(null);
   const [seasonNumber, setSeasonNumber] = useState(null);
-  const [server, setServer] = useState("server1");
+  const [server, setServer] = useState(servers[0].key);
 
   const handleServerChange = (newServer) => {
     setServer(newServer);
@@ -101,7 +101,7 @@ const WatchPage = () => {
   //  Determine bookmark state from watchlist
   useEffect(() => {
     const bookmarked = watchlist?.some(
-      (item) => String(item.id) === id && item.type === category
+      (item) => String(item.id) === id && item.type === category,
     );
     setIsBookmarked(bookmarked);
   }, [watchlist, id, category]);
@@ -355,7 +355,7 @@ const WatchPage = () => {
 
             <p className="mt-2 text-lg">
               {formatReleaseDate(
-                content?.release_date || content?.first_air_date
+                content?.release_date || content?.first_air_date,
               )}{" "}
               |{" "}
               {content?.adult ? (

@@ -5,6 +5,7 @@ import HomePage from "./pages/home/HomePage";
 import WatchPage from "./pages/WatchPage.jsx";
 import WatchList from "./pages/WatchList.jsx";
 import GenrePage from "./pages/GenrePage.jsx";
+import Updates from "./pages/Updates.jsx";
 import AnimeHomePage from "./pages/home/AnimeHomePage.jsx";
 import ActorMovies from "./pages/ActorMovies.jsx";
 import { Routes, Route, Navigate } from "react-router-dom";
@@ -28,10 +29,8 @@ import AnimeWatchlist from "./pages/ANIFLIX/AnimeWatchlist.jsx";
 import AnimeHistory from "./pages/ANIFLIX/AnimeHistory.jsx";
 import AnimeProfile from "./pages/ANIFLIX/AnimeProfile.jsx";
 
-
 function App() {
-  const { user, isCheckingAuth, authCheck } =
-    useAuthUserStore();
+  const { user, isCheckingAuth, authCheck } = useAuthUserStore();
   const location = useLocation();
 
   useEffect(() => {
@@ -53,182 +52,84 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route
           path="/login"
-          element={
-            !user ? <LoginPage /> : <Navigate to={"/"} />
-          }
+          element={!user ? <LoginPage /> : <Navigate to={"/"} />}
         />
         <Route
           path="/signup"
-          element={
-            !user ? <SignupPage /> : <Navigate to={"/"} />
-          }
+          element={!user ? <SignupPage /> : <Navigate to={"/"} />}
         />
         <Route
           path="/watch/:category/:id"
-          element={
-            user ? (
-              <WatchPage />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <WatchPage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/search"
-          element={
-            user ? (
-              <SearchPage />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <SearchPage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/history"
-          element={
-            user ? (
-              <HistoryPage />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <HistoryPage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/watchlist"
-          element={
-            user ? (
-              <WatchList />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <WatchList /> : <Navigate to={"/login"} />}
+        />
+        <Route
+          path="/updates"
+          element={user ? <Updates /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/anime"
-          element={
-            user ? (
-              <AnimeHomePage />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <AnimeHomePage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/genre/:category/:id/:genreName"
-          element={
-            user ? (
-              <GenrePage />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <GenrePage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/actor/movie/:id/:name"
-          element={
-            user ? (
-              <ActorMovies />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <ActorMovies /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/profile/:username"
-          element={
-            user ? (
-              <ProfilePage />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <ProfilePage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/edit-profile"
-          element={
-            user ? (
-              <AvatarSelector />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <AvatarSelector /> : <Navigate to={"/login"} />}
         />
         {/* Anime Routes */}
         <Route
           path="/anime/watch/:id"
-          element={
-            user ? (
-              <AnimeWatchPage />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <AnimeWatchPage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/anime/search"
-          element={
-            user ? (
-              <AnimeSearchPage />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <AnimeSearchPage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/anime/history"
-          element={
-            user ? (
-              <AnimeHistory />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <AnimeHistory /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/anime/watchlist"
-          element={
-            user ? (
-              <AnimeWatchlist />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <AnimeWatchlist /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/genre/anime/:id/:genreName"
-          element={
-            user ? (
-              <AnimeSearchPage />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <AnimeSearchPage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/anime/profile/:username"
-          element={
-            user ? (
-              <AnimeProfile />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <AnimeProfile /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/anime/news"
-          element={
-            user ? (
-              <AnimeNews />
-            ) : (
-              <Navigate to={"/login"} />
-            )
-          }
+          element={user ? <AnimeNews /> : <Navigate to={"/login"} />}
         />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
-      {!location.pathname.startsWith("/edit-profile") && (
-        <Footer />
-      )}
+      {!location.pathname.startsWith("/edit-profile") && <Footer />}
       <Toaster position="top-center" />
       <ToastContainer toastStyle={{ color: "black" }} />
     </>

@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import {
-  Search,
-  BookmarkCheck,
-  BookmarkPlus,
-  FilterIcon,
-} from "lucide-react";
+import { Search, BookmarkCheck, BookmarkPlus, FilterIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { ORIGINAL_IMG_BASE_URL } from "../utils/constants.js";
@@ -13,16 +8,16 @@ import { Link } from "react-router-dom";
 import SearchSkeleton from "../components/skeletons/SearchSkeleton.jsx";
 import { useAuthUserStore } from "../store/authUser.js";
 import Note from "../components/Note.jsx";
+import useSearchHistory from "../hooks/useSearchHistory.jsx";
+// import { useQueryClient } from "@tanstack/react-query";
+
 const years = [
-  2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017,
-  2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008,
-  2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000,
+  2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
+  2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000,
 ];
 const SearchPage = () => {
   const [activeTab, setActiveTab] = useState("movie");
-  const [bookmarkedIds, setBookmarkedIds] = useState(
-    new Set()
-  );
+  const [bookmarkedIds, setBookmarkedIds] = useState(new Set());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter, setFilter] = useState(false);
   const [syear, setYear] = useState(null);
@@ -34,23 +29,25 @@ const SearchPage = () => {
 
   const { user, updateWatchList } = useAuthUserStore();
 
+  // const queryClient = useQueryClient();
+
+  // ✅ Get search history from TanStack Query
+  const {
+    data: searchHistory = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useSearchHistory();
+
   useEffect(() => {
     if (user?.watchList) {
-      const ids = new Set(
-        user.watchList.map((item) => item.id)
-      );
+      const ids = new Set(user.watchList.map((item) => item.id));
       setBookmarkedIds(ids);
     }
   }, [user]);
 
-  const handleAddToWatchlist = async (
-    itemId,
-    title,
-    posterPath
-  ) => {
-    const promise = axios.post(
-      `/api/v1/watchlist/${activeTab}/${itemId}`
-    );
+  const handleAddToWatchlist = async (itemId, title, posterPath) => {
+    const promise = axios.post(`/api/v1/watchlist/${activeTab}/${itemId}`);
     toast.promise(promise, {
       loading: "Adding...",
       success: "Added to watchlist!",
@@ -60,9 +57,7 @@ const SearchPage = () => {
     try {
       const res = await promise;
       if (res.data.success) {
-        setBookmarkedIds((prev) =>
-          new Set(prev).add(itemId)
-        );
+        setBookmarkedIds((prev) => new Set(prev).add(itemId));
         updateWatchList({
           id: itemId,
           type: activeTab,
@@ -88,17 +83,14 @@ const SearchPage = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `/api/v1/search/${activeTab}/${searchQuery.trim()}?page=${currentPage}&year=${syear}`
+        `/api/v1/search/${activeTab}/${searchQuery.trim()}?page=${currentPage}&year=${syear}`,
       );
       let newResults = res.data?.content || [];
 
       if (activeTab === "person") {
         const uniqueByName = {};
         newResults.forEach((item) => {
-          if (
-            item.profile_path &&
-            !uniqueByName[item.name]
-          ) {
+          if (item.profile_path && !uniqueByName[item.name]) {
             uniqueByName[item.name] = item;
           }
         });
@@ -109,13 +101,9 @@ const SearchPage = () => {
 
       setSearchResults((prev) => [...prev, ...newResults]);
       setPage((prev) => prev + 1);
-      if (currentPage >= res.data.totalPages)
-        setHasMore(false);
+      if (currentPage >= res.data.totalPages) setHasMore(false);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Error fetching results."
-      );
+      toast.error(error.response?.data?.message || "Error fetching results.");
       setHasMore(false);
     } finally {
       setLoading(false);
@@ -141,8 +129,7 @@ const SearchPage = () => {
       }
     };
     window.addEventListener("scroll", handleScroll);
-    return () =>
-      window.removeEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [page, loading, hasMore]);
 
   function handleFilter() {
@@ -158,6 +145,11 @@ const SearchPage = () => {
   function closeModal() {
     setIsModalOpen(false);
   }
+  const handleHistorySearch = (item) => {
+    setActiveTab(item.searchType);
+    setSearchQuery(item.searchQuery);
+    setSearchResults([]);
+  };
   return (
     <div className="bg-black min-h-screen text-white">
       <Navbar />
@@ -169,16 +161,14 @@ const SearchPage = () => {
               tab === "movie"
                 ? "bg-blue-500"
                 : tab === "tv"
-                ? "bg-green-500"
-                : "bg-red-500";
+                  ? "bg-green-500"
+                  : "bg-red-500";
             return (
               <button
                 key={tab}
                 disabled={tab === "person" ? filter : null}
                 className={`py-2 px-4 rounded ${
-                  isActive
-                    ? activeColor
-                    : "bg-gray-800 text-gray-300"
+                  isActive ? activeColor : "bg-gray-800 text-gray-300"
                 } text-white hover:scale-105 transition`}
                 onClick={() => handleClick(tab)}
               >
@@ -208,9 +198,7 @@ const SearchPage = () => {
                     <button
                       onClick={() => handleYear(year)}
                       className={`${
-                        syear === year
-                          ? "bg-blue-500"
-                          : "bg-gray-500"
+                        syear === year ? "bg-blue-500" : "bg-gray-500"
                       } px-3 mb-1 rounded`}
                     >
                       {year}
@@ -235,7 +223,7 @@ const SearchPage = () => {
         </div>
         <form
           onSubmit={handleSearch}
-          className="flex gap-2 items-stretch mb-8 max-w-2xl mx-auto"
+          className="flex gap-2 items-stretch mb-4 max-w-2xl mx-auto"
         >
           <input
             type="text"
@@ -249,13 +237,38 @@ const SearchPage = () => {
             <Search className="size-6" />
           </button>
         </form>
+        {searchHistory.length > 0 && (
+          <div className="max-w-2xl mx-auto mb-6">
+            <h3 className="text-lg font-semibold mb-2">
+              Recent Searches{" "}
+              <button className="bg-gray-800 p-1 rounded" onClick={handleModal}>
+                Info
+              </button>
+              <Note
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                title="Note!!"
+                message="You can delete the respective search results from the History Page."
+              />
+            </h3>
 
+            <div className="flex flex-wrap gap-2">
+              {searchHistory.map((item) => (
+                <button
+                  key={item.id + item.created}
+                  onClick={() => handleHistorySearch(item)}
+                  className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600 text-sm"
+                >
+                  {item.searchQuery}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="lg:px-15 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-6 gap-4">
           {searchResults.map((item) => {
             const imagePath =
-              activeTab === "person"
-                ? item?.profile_path
-                : item?.poster_path;
+              activeTab === "person" ? item?.profile_path : item?.poster_path;
             const nameOrTitle = item?.title || item?.name;
             if (!imagePath) return null;
             const linkTo =
@@ -266,9 +279,7 @@ const SearchPage = () => {
               activeTab === "movie"
                 ? item?.release_date?.split("-")[0]
                 : item?.first_air_date?.split("-")[0];
-            const isBookmarked = bookmarkedIds.has(
-              item?.id
-            );
+            const isBookmarked = bookmarkedIds.has(item?.id);
 
             return (
               <div
@@ -281,9 +292,7 @@ const SearchPage = () => {
                 >
                   <div className="relative">
                     <img
-                      src={
-                        ORIGINAL_IMG_BASE_URL + imagePath
-                      }
+                      src={ORIGINAL_IMG_BASE_URL + imagePath}
                       alt={nameOrTitle}
                       className="w-64 md:h-100 h-full rounded"
                     />
@@ -296,14 +305,12 @@ const SearchPage = () => {
                             handleAddToWatchlist(
                               item?.id,
                               nameOrTitle,
-                              item?.poster_path
+                              item?.poster_path,
                             );
                           }
                         }}
                         className={`absolute top-2 right-2 group ${
-                          isBookmarked
-                            ? "opacity-70 cursor-not-allowed"
-                            : ""
+                          isBookmarked ? "opacity-70 cursor-not-allowed" : ""
                         } p-2 rounded-2xl bg-black/70 backdrop-blur-lg shadow-[0_0_8px_8px_rgba(0,0,0,0.7)] transition duration-300`}
                       >
                         {isBookmarked ? (
