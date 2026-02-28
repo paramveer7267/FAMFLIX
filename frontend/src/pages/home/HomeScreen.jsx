@@ -3,6 +3,7 @@ import MovieSlider from "../../components/MovieSlider.jsx";
 import Navbar from "../../components/Navbar.jsx";
 import { Link } from "react-router-dom";
 import { Info, Play } from "lucide-react";
+import packageJson from "../../../package.json";
 import useGetTrendingContent from "../../hooks/useGetTrendingContent.jsx";
 import {
   ORIGINAL_IMG_BASE_URL,
@@ -29,20 +30,38 @@ const HomeScreen = () => {
       const timeout = setTimeout(() => {
         setShowSplash(false);
 
-        // Show toast after splash ends
         if (localStorage.getItem("justLoggedIn")) {
+          const version = packageJson.version;
+
           toastify(
-            "👋 Hey there, Dev here, just wanted to let you know that I added a new player and now you don't have to select the previously selected episode every time you open a TV show.😎",
+            <div className="text-sm">
+              <p className="mb-2">
+                👋 Hey! Dev here — I’ve updated the Search History. Your recent
+                searches are saved and appear instantly at the top. 😎
+              </p>
+
+              <div className="flex justify-between items-center mt-2 text-sm">
+                <a
+                  href="/updates"
+                  className="underline font-semibold hover:text-blue-600"
+                >
+                  View Full Updates →
+                </a>
+
+                <span className="opacity-70">v{version}</span>
+              </div>
+            </div>,
             {
               position: "bottom-left",
               theme: "light",
-              autoClose: 8000,
+              autoClose: 20000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
               draggable: true,
-            }
+            },
           );
+
           localStorage.removeItem("justLoggedIn");
         }
       }, 4000);
@@ -139,10 +158,10 @@ const HomeScreen = () => {
               <MovieSlider key={category} category={category} />
             ))
           : contentType === "tv"
-          ? TV_CATEGORIES.map((category) => (
-              <MovieSlider key={category} category={category} />
-            ))
-          : null}
+            ? TV_CATEGORIES.map((category) => (
+                <MovieSlider key={category} category={category} />
+              ))
+            : null}
 
         {/* <div className="flex flex-col items-center justify-center font-semibold">
           <h2 className="mb-2 text-white text-lg lg:text-2xl">
