@@ -48,12 +48,12 @@ export const servers = [
     movieUrl: "https://vidsrc.cc/v2/embed/movie/",
     tvUrl: "https://vidsrc.cc/v2/embed/tv/",
   },
-  {
-    key: "server7",
-    label: "Download (Ads)",
-    movieUrl: "https://vidvault.ru/movie/",
-    tvUrl: "https://vidvault.ru/tv/",
-  },
+  // {
+  //   key: "server7",
+  //   label: "Download (Ads)",
+  //   movieUrl: "https://vidvault.ru/movie/",
+  //   tvUrl: "https://vidvault.ru/tv/",
+  // },
 ];
 export const updates = [
   {

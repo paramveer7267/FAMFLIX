@@ -191,6 +191,13 @@ const WatchPage = () => {
     setEpisodeNumber(parseInt(data.showEpisode));
   }
 
+  const downloadUrl =
+    category === "movie"
+      ? `${"https://vidvault.ru/movie/"}${id}`
+      : seasonNumber && episodeNumber
+        ? `${"https://vidvault.ru/tv/"}${id}/${seasonNumber}/${episodeNumber}`
+        : null;
+
   //  Loading skeleton
   if (loading)
     return (
@@ -334,6 +341,7 @@ const WatchPage = () => {
               )}
             </div>
           )}
+
           <div className="mb-4">
             <p className="md:px-13 px-2 pt-2 text-sm sm:text-xl italic">
               Use Brave browser for no ads. 😎
@@ -343,47 +351,82 @@ const WatchPage = () => {
             </p>
           </div>
         </div>
+
+
         {/* Content Details */}
-        <div className="flex flex-col md:flex-row px-4 items-center justify-between gap-10 max-w-6xl mx-auto">
+        <div className="px-4 max-w-6xl mx-auto flex flex-col gap-3">
+          {/* Title Section */}
           <div>
-            <h2 className="text-2xl sm:text-5xl font-bold">
+            <h2 className="text-3xl sm:text-5xl font-bold">
               {content?.title || content?.name}
             </h2>
-            <p className="text-gray-400 italic">{content?.tagline}</p>
+            {content?.tagline && (
+              <p className="text-gray-400 italic mt-1">{content.tagline}</p>
+            )}
+          </div>
 
-            {/* ✅ Bookmark Button */}
+          {/* Actions */}
+          <div className="flex gap-3 flex-wrap">
+            {/* Bookmark */}
             <button
-              className="ml-auto mt-2 sm:mt-4 bg-blue-600 hover:bg-blue-700 text-sm sm:text-2xl text-white px-4 sm:px-8 py-2 rounded"
               onClick={handleToggleWatchlist}
               disabled={
                 addToWatchlistMutation.isLoading ||
                 removeFromWatchlistMutation.isLoading
               }
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white disabled:opacity-50"
             >
               {isBookmarked ? (
-                <BookmarkCheck className="size-6" />
+                <BookmarkCheck className="size-5" />
               ) : (
-                <BookmarkPlus className="size-6" />
+                <BookmarkPlus className="size-5" />
               )}
+              <span className="hidden sm:inline">
+                {isBookmarked ? "Saved" : "Watchlist"}
+              </span>
             </button>
 
-            <p className="mt-2 text-lg">
-              {formatReleaseDate(
-                content?.release_date || content?.first_air_date,
-              )}{" "}
-              |{" "}
-              {content?.adult ? (
-                <span className="text-red-600">18+</span>
-              ) : (
-                <span className="text-green-600">PG-13</span>
-              )}
-            </p>
+            {/* Download */}
+            <a
+              href={downloadUrl || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => {
+                if (!downloadUrl) {
+                  e.preventDefault();
+                  toast.error("Select season & episode");
+                }
+              }}
+              className={`px-4 py-2 rounded text-white transition
+        ${
+          downloadUrl
+            ? "bg-green-600 hover:bg-green-700"
+            : "bg-gray-600 cursor-not-allowed"
+        }`}
+            >
+              Download
+            </a>
+          </div>
 
-            {/* Genres */}
-            <p className="mt-2 text-[#1E90FF] text-md font-semibold md:text-xl">
-              Genres:
-              <span className="text-gray-400 text-sm md:text-lg ml-2">
-                {content?.genres?.map((g, i) => (
+          {/* Meta Info */}
+          <p className="text-sm sm:text-base text-gray-300">
+            {formatReleaseDate(
+              content?.release_date || content?.first_air_date,
+            )}{" "}
+            •{" "}
+            {content?.adult ? (
+              <span className="text-red-500">18+</span>
+            ) : (
+              <span className="text-green-500">PG-13</span>
+            )}
+          </p>
+
+          {/* Genres */}
+          {content?.genres?.length > 0 && (
+            <p>
+              <span className="text-blue-400 font-semibold">Genres: </span>
+              <span className="text-gray-300">
+                {content.genres.map((g, i) => (
                   <span key={g.id}>
                     <Link
                       to={`/genre/${category}/${g.id}/${g.name}`}
@@ -396,32 +439,40 @@ const WatchPage = () => {
                 ))}
               </span>
             </p>
+          )}
 
-            {/* Casts */}
-            <p className="text-[#1E90FF] text-md font-semibold md:text-xl mt-2">
-              Casts:{" "}
-              <span className="text-gray-400 text-sm md:text-lg">
+          {/* Cast */}
+          {cast?.length > 0 && (
+            <p>
+              <span className="text-blue-400 font-semibold">Casts: </span>
+              <span className="text-gray-300">
                 {cast
                   .slice(0, 10)
                   .map((c) => c.name)
                   .join(", ")}
               </span>
             </p>
+          )}
 
-            {/* Production Companies */}
-            <p className="text-[#1E90FF] text-md font-semibold md:text-xl mt-2">
-              Production Companies:{" "}
-              <span className="text-gray-400 text-sm md:text-lg">
+          {/* Production */}
+          {content?.production_companies?.length > 0 && (
+            <p>
+              <span className="text-blue-400 font-semibold">Production: </span>
+              <span className="text-gray-300">
                 {content.production_companies.map((c) => c.name).join(", ")}
               </span>
             </p>
+          )}
 
-            {/* Overview */}
-            <p className="text-[#1E90FF] text-md font-semibold md:text-xl mt-2">
-              Overview:
-            </p>
-            <p className="sm:text-xl text-md">{content?.overview}</p>
-          </div>
+          {/* Overview */}
+          {content?.overview && (
+            <div>
+              <p className="text-blue-400 font-semibold mb-1">Overview:</p>
+              <p className="text-gray-200 leading-relaxed">
+                {content.overview}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Poster */}
