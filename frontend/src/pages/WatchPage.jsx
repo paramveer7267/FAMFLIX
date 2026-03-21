@@ -430,7 +430,7 @@ const WatchPage = () => {
           <AnimatePresence>
             {isClicked && (
               <motion.div
-                className="fixed inset-0 z-50 bg-black/60 backdrop-blur-lg flex items-center justify-center"
+                className="fixed inset-0 z-50 bg-black/80  flex items-center justify-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -446,7 +446,7 @@ const WatchPage = () => {
                   <img
                     src={ORIGINAL_IMG_BASE_URL + content?.poster_path}
                     alt="Selected Avatar"
-                    className="h-50 w-40 md:h-100 md:w-80 rounded cursor-pointer"
+                    className="h-120 w-80 md:h-120 md:w-100 rounded-lg cursor-pointer"
                   />
                 </motion.div>
               </motion.div>
