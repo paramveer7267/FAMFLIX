@@ -49,7 +49,6 @@ const ProfilePage = () => {
       if (response.data.success) {
         setWatchHistory(response.data.content);
       }
-      console.log("Watch History:", response.data.content);
     };
     fetchWatchHistory();
   }, []);
@@ -100,17 +99,9 @@ const ProfilePage = () => {
               <h1 className="text-2xl font-bold">{user.username}</h1>
               <p className="text-gray-400 text-sm">{user.email}</p>
               <p className="text-sm text-blue-500 font-semibold">
-                Plan: Basic • Member since {formatDate(user.createdAt)}
+                Plan:
+                <span className="text-purple-600 text-lg"> Cosmic</span> • Member since {formatDate(user.createdAt)}
               </p>
-
-              <div className="flex mt-4">
-                <Link
-                  to="/change-password"
-                  className="px-6 py-2 bg-[#1E90FF] hover:bg-[#1f88e5] active:bg-[#529af1] text-white font-semibold rounded-md"
-                >
-                  Change Password
-                </Link>
-              </div>
             </div>
           </div>
           <button

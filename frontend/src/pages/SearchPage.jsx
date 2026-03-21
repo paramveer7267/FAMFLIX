@@ -18,7 +18,8 @@ const years = [
 const SearchPage = () => {
   const [activeTab, setActiveTab] = useState("movie");
   const [bookmarkedIds, setBookmarkedIds] = useState(new Set());
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFilterNoteOpen, setIsFilterNoteOpen] = useState(false);
+  const [isHistoryNoteOpen, setIsHistoryNoteOpen] = useState(false);
   const [filter, setFilter] = useState(false);
   const [syear, setYear] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,12 +33,7 @@ const SearchPage = () => {
   // const queryClient = useQueryClient();
 
   // ✅ Get search history from TanStack Query
-  const {
-    data: searchHistory = [],
-    isLoading,
-    isError,
-    refetch,
-  } = useSearchHistory();
+  const { data: searchHistory = [] } = useSearchHistory();
 
   useEffect(() => {
     if (user?.watchList) {
@@ -139,11 +135,19 @@ const SearchPage = () => {
   function handleYear(year) {
     setYear(year);
   }
-  function handleModal() {
-    setIsModalOpen(true);
+  function openFilterNote() {
+    setIsFilterNoteOpen(true);
   }
-  function closeModal() {
-    setIsModalOpen(false);
+
+  function openHistoryNote() {
+    setIsHistoryNoteOpen(true);
+  }
+  function closeFilterNote() {
+    setIsFilterNoteOpen(false);
+  }
+
+  function closeHistoryNote() {
+    setIsHistoryNoteOpen(false);
   }
   const handleHistorySearch = (item) => {
     setActiveTab(item.searchType);
@@ -207,13 +211,13 @@ const SearchPage = () => {
                 </div>
                 <button
                   className="bg-gray-800 p-1 rounded"
-                  onClick={handleModal}
+                  onClick={openFilterNote}
                 >
                   Note!!
                 </button>
                 <Note
-                  isOpen={isModalOpen}
-                  onClose={closeModal}
+                  isOpen={isFilterNoteOpen}
+                  onClose={closeFilterNote}
                   title="Note!!"
                   message="For using the Advance Filters you won't be to use search bar only the search button obviously for filters to work. Don't ask me how but this is how it works. Peace☮️"
                 />
@@ -241,12 +245,15 @@ const SearchPage = () => {
           <div className="max-w-2xl mx-auto mb-6">
             <h3 className="text-lg font-semibold mb-2">
               Recent Searches{" "}
-              <button className="bg-gray-800 p-1 rounded" onClick={handleModal}>
+              <button
+                className="bg-gray-800 p-1 rounded"
+                onClick={openHistoryNote}
+              >
                 Info
               </button>
               <Note
-                isOpen={isModalOpen}
-                onClose={closeModal}
+                isOpen={isHistoryNoteOpen}
+                onClose={closeHistoryNote}
                 title="Note!!"
                 message="You can delete the respective search results from the History Page."
               />

@@ -1,5 +1,4 @@
 import { useParams, Link, useLocation } from "react-router-dom";
-import { isIOS } from "react-device-detect";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
@@ -19,6 +18,8 @@ import TvEpisodes from "../components/TvEpisodes";
 import useWatchlist from "../hooks/useWatchlist";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { servers } from "../utils/constants";
+import { AnimatePresence, motion } from "framer-motion";
+
 const WatchPage = () => {
   const { id, category } = useParams();
   const location = useLocation();
@@ -38,7 +39,11 @@ const WatchPage = () => {
   const [episodeNumber, setEpisodeNumber] = useState(null);
   const [seasonNumber, setSeasonNumber] = useState(null);
   const [server, setServer] = useState(servers[0].key);
+  const [isClicked, setIsClicked] = useState(false);
 
+  function handleClick() {
+    setIsClicked(!isClicked);
+  }
   const handleServerChange = (newServer) => {
     setServer(newServer);
   };
@@ -274,10 +279,19 @@ const WatchPage = () => {
                 src={getVideoSrc()}
                 width="95%"
                 height="90%"
-                referrerPolicy="origin"
-                allowFullScreen
                 className="block aspect-video mx-auto rounded mt-4"
-              ></iframe>
+                referrerPolicy="no-referrer"
+                loading="lazy"
+                // 🔒 Restrict capabilities
+                //               sandbox="
+                //   allow-same-origin
+                //   allow-scripts
+                //   allow-presentation
+                // "
+                // 🔒 Limit features
+                allow="fullscreen; picture-in-picture"
+                allowFullScreen
+              />
             </div>
           )}
           {/* {Tabs of servers} */}
@@ -394,6 +408,14 @@ const WatchPage = () => {
               </span>
             </p>
 
+            {/* Production Companies */}
+            <p className="text-[#1E90FF] text-md font-semibold md:text-xl mt-2">
+              Production Companies:{" "}
+              <span className="text-gray-400 text-sm md:text-lg">
+                {content.production_companies.map((c) => c.name).join(", ")}
+              </span>
+            </p>
+
             {/* Overview */}
             <p className="text-[#1E90FF] text-md font-semibold md:text-xl mt-2">
               Overview:
@@ -405,10 +427,36 @@ const WatchPage = () => {
         {/* Poster */}
         <div className="max-w-6xl mx-auto mt-4 px-4">
           <p className="text-[#1E90FF] text-xl font-semibold">Poster:</p>
+          <AnimatePresence>
+            {isClicked && (
+              <motion.div
+                className="fixed inset-0 z-50 bg-black/60 backdrop-blur-lg flex items-center justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={handleClick}
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  transition={{ duration: 0.25 }}
+                  className=" flex items-center justify-center"
+                >
+                  <img
+                    src={ORIGINAL_IMG_BASE_URL + content?.poster_path}
+                    alt="Selected Avatar"
+                    className="h-50 w-40 md:h-100 md:w-80 rounded cursor-pointer"
+                  />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <img
             src={ORIGINAL_IMG_BASE_URL + content?.poster_path}
+            onClick={handleClick}
             alt="poster img"
-            className="h-50 w-40 md:h-100 md:w-80 mt-2 md:max-h-[700px] mx-auto rounded"
+            className="h-50 w-40 md:h-100 md:w-80 mt-2 md:max-h-[700px] mx-auto rounded cursor-pointer"
           />
         </div>
 

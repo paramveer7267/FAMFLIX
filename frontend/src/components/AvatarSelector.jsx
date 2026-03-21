@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuthUserStore } from "../store/authUser";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import DeleteConfirmationModal from "./DeleteModal";
 import { motion, AnimatePresence } from "framer-motion";
@@ -103,13 +103,12 @@ const AvatarSelector = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isClicked, setIsClicked] = useState(false);
-  const [editingUsername, setEditingUsername] =
-    useState(false);
+  const [editingUsername, setEditingUsername] = useState(false);
   // const [editingEmail, setEditingEmail] = useState(false);
   const [username, setUsername] = useState(user.username);
   const [email] = useState(user.email);
   const [selected, setSelected] = useState(
-    user.image || "/avatars/classic/classic-1.png"
+    user.image || "/avatars/classic/classic-1.png",
   );
 
   const usernameRef = useRef(null);
@@ -127,10 +126,7 @@ const AvatarSelector = () => {
   // Dismiss edit mode on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        usernameRef.current &&
-        !usernameRef.current.contains(event.target)
-      ) {
+      if (usernameRef.current && !usernameRef.current.contains(event.target)) {
         setEditingUsername(false);
       }
       // if (
@@ -141,15 +137,8 @@ const AvatarSelector = () => {
       // }
     };
 
-    document.addEventListener(
-      "mousedown",
-      handleClickOutside
-    );
-    return () =>
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside
-      );
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -188,9 +177,7 @@ const AvatarSelector = () => {
 
         {/* Avatar preview and editable fields */}
         <div className="text-center mb-6">
-          <h2 className="text-xl font-semibold">
-            Edit Avatar
-          </h2>
+          <h2 className="text-xl font-semibold">Edit Avatar</h2>
           <AnimatePresence>
             {isClicked && (
               <motion.div
@@ -234,12 +221,9 @@ const AvatarSelector = () => {
                 type="text"
                 className="bg-gray-800 border border-gray-600 px-2 py-1 h-6 rounded text-center text-white"
                 value={username}
-                onChange={(e) =>
-                  setUsername(e.target.value)
-                }
+                onChange={(e) => setUsername(e.target.value)}
                 onKeyDown={(e) =>
-                  e.key === "Enter" &&
-                  setEditingUsername(false)
+                  e.key === "Enter" && setEditingUsername(false)
                 }
               />
             ) : (
@@ -248,12 +232,17 @@ const AvatarSelector = () => {
             <PencilIcon
               size={16}
               className="cursor-pointer"
-              onClick={() =>
-                setEditingUsername((prev) => !prev)
-              }
+              onClick={() => setEditingUsername((prev) => !prev)}
             />
           </div>
-
+          <div className="flex mt-2 justify-center">
+            <Link
+              to="/change-password"
+              className="px-3 py-1 bg-[#1E90FF] hover:bg-[#1f88e5] active:bg-[#529af1] text-white font-semibold rounded-md"
+            >
+              Change Password
+            </Link>
+          </div>
           {/* Email */}
           <div
             ref={emailRef}
@@ -283,43 +272,37 @@ const AvatarSelector = () => {
         </div>
 
         {/* Avatar categories */}
-        {Object.entries(avatarCategories).map(
-          ([category, avatars]) => (
-            <div key={category} className="mb-4">
-              <h3 className="text-md font-bold mb-2">
-                {category}
-              </h3>
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide ">
-                {avatars.map((avatar) => {
-                  const imgPath = `/avatars/${category
-                    .toLowerCase()
-                    .replace(/ /g, "-")}/${avatar}`;
-                  return (
-                    <img
-                      key={avatar}
-                      src={imgPath}
-                      alt={avatar}
-                      loading="lazy"
-                      onClick={() =>
-                        handleSelect(
-                          category
-                            .toLowerCase()
-                            .replace(/ /g, "-"),
-                          avatar
-                        )
-                      }
-                      className={`size-22 rounded-full cursor-pointer border-4 ${
-                        selected === imgPath
-                          ? "border-blue-500"
-                          : "border-transparent"
-                      }`}
-                    />
-                  );
-                })}
-              </div>
+        {Object.entries(avatarCategories).map(([category, avatars]) => (
+          <div key={category} className="mb-4">
+            <h3 className="text-md font-bold mb-2">{category}</h3>
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide ">
+              {avatars.map((avatar) => {
+                const imgPath = `/avatars/${category
+                  .toLowerCase()
+                  .replace(/ /g, "-")}/${avatar}`;
+                return (
+                  <img
+                    key={avatar}
+                    src={imgPath}
+                    alt={avatar}
+                    loading="lazy"
+                    onClick={() =>
+                      handleSelect(
+                        category.toLowerCase().replace(/ /g, "-"),
+                        avatar,
+                      )
+                    }
+                    className={`size-22 rounded-full cursor-pointer border-4 ${
+                      selected === imgPath
+                        ? "border-blue-500"
+                        : "border-transparent"
+                    }`}
+                  />
+                );
+              })}
             </div>
-          )
-        )}
+          </div>
+        ))}
 
         {/* Save button */}
         <div className="text-center mt-6">
@@ -357,25 +340,20 @@ const AvatarSelectorSkeleton = () => {
         <div className="h-4 w-24 mb-6 bg-gray-600 mx-auto rounded" />
         <div className="h-4 w-50 mb-8 bg-gray-600 mx-auto mt-2 rounded" />
       </div>
-      {["Classic", "Anime", "Funky", "Insane", "Old"].map(
-        (category) => (
-          <div key={category} className="mb-6">
-            <div className="h-4 w-24 bg-gray-600 mb-3 rounded" />
-            <div className="overflow-x-auto scrollbar-hide">
-              <div className="flex gap-3 min-w-max">
-                {Array(12)
-                  .fill(0)
-                  .map((_, i) => (
-                    <div
-                      key={i}
-                      className="size-22 bg-gray-600 rounded-full"
-                    />
-                  ))}
-              </div>
+      {["Classic", "Anime", "Funky", "Insane", "Old"].map((category) => (
+        <div key={category} className="mb-6">
+          <div className="h-4 w-24 bg-gray-600 mb-3 rounded" />
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex gap-3 min-w-max">
+              {Array(12)
+                .fill(0)
+                .map((_, i) => (
+                  <div key={i} className="size-22 bg-gray-600 rounded-full" />
+                ))}
             </div>
           </div>
-        )
-      )}
+        </div>
+      ))}
     </div>
   );
 };

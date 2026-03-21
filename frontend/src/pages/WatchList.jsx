@@ -92,7 +92,6 @@ const WatchList = () => {
       </div>
     );
   }
-  console.log(watchlist[0]);
   if (isError) {
     return (
       <div className="bg-black min-h-screen text-white">

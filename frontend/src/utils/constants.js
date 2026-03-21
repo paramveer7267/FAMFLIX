@@ -48,10 +48,34 @@ export const servers = [
     movieUrl: "https://vidsrc.cc/v2/embed/movie/",
     tvUrl: "https://vidsrc.cc/v2/embed/tv/",
   },
+  {
+    key: "server7",
+    label: "Download (Ads)",
+    movieUrl: "https://vidvault.ru/movie/",
+    tvUrl: "https://vidvault.ru/tv/",
+  },
 ];
 export const updates = [
   {
     version: packageJson.version,
+    // v1.5.0
+    date: "2026-03-22",
+    title: "Content Downloadable and more",
+
+    description:
+      "Added Downloadable content, fixed modals in search history",
+
+    updates: `
+  • Added Downloadable content.
+  • Zoom in on movie poster.
+  `,
+
+    bugFixes: `Minor bug fixes.`,
+
+    active: true,
+  },
+  {
+    version:"1.4.0",
     // v1.4.0
     date: "2026-03-13",
     title: "Password Recovery + Email Reset System",
@@ -66,7 +90,7 @@ export const updates = [
 
     bugFixes: `Minor bug fixes.`,
 
-    active: true,
+    active: false,
   },
   {
     version: "1.3.0",
