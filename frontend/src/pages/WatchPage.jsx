@@ -216,7 +216,6 @@ const WatchPage = () => {
         </h2>
       </div>
     );
-
   return (
     <div className="bg-black min-h-screen text-white">
       <div className="mx-auto container h-full">
@@ -303,34 +302,50 @@ const WatchPage = () => {
           )}
           {/* {Tabs of servers} */}
           <div className="flex flex-col items-center ">
-            <p className="text-gray-400">Select a server:</p>
             {tab === "stream" && (
-              <div className="flex flex-wrap justify-center gap-2 mt-2">
-                {servers.map((s) => (
-                  <button
-                    key={s.key}
-                    onClick={() => handleServerChange(s.key)}
-                    className={`py-2 px-4 rounded-lg transition-all ${
-                      server === s.key
-                        ? "bg-green-600 text-white"
-                        : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                    }`}
-                  >
-                    {s.label}
-                  </button>
-                ))}
+              <div className="bg-gray-800/50 rounded-lg p-4 w-full flex flex-col items-center max-w-md">
+                {/* <p className="text-gray-400">Select a server:</p> */}
+                <div className="flex flex-wrap justify-center gap-2 mt-2">
+                  {servers.map((s) => (
+                    <button
+                      key={s.key}
+                      onClick={() => handleServerChange(s.key)}
+                      className={`p-2 text-xs rounded-lg transition-all ${
+                        server === s.key
+                          ? "bg-green-600 text-white"
+                          : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                      }`}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+                <div>
+                  {seasonNumber && episodeNumber && (
+                    <>
+                      <p className="text-white text-center text-sm mt-8">
+                        Your are watching Season {seasonNumber}, Episode{" "}
+                        {episodeNumber}
+                      </p>
+                    </>
+                  )}
+                </div>
+                <p className="text-gray-400 text-xs text-center mt-1">
+                  If video doesn't load, try changing the server or select
+                  season & episode again.
+                </p>
               </div>
             )}
           </div>
 
           {/* TV Episodes */}
           {category === "tv" && (
-            <div className="flex flex-col mt-2 items-center gap-2">
+            <div className="flex flex-col bg-gray-800/60 rounded-lg mt-2 items-center gap-2">
               <button
                 onClick={() => setShowEpisodes((prev) => !prev)}
-                className={` text-gray-400 rounded px-4 py-2`}
+                className={` text-white font-bold rounded text-lg px-4 py-2`}
               >
-                {showEpisodes ? "Hide Episodes" : "Show Episodes:"}
+                Seasons
               </button>
               {showEpisodes && (
                 <TvEpisodes
@@ -351,7 +366,6 @@ const WatchPage = () => {
             </p>
           </div>
         </div>
-
 
         {/* Content Details */}
         <div className="px-4 max-w-6xl mx-auto flex flex-col gap-3">
