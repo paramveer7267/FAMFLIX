@@ -36,7 +36,7 @@ const HomeScreen = () => {
           toastify(
             <div className="text-sm">
               <p className="mb-2">
-                👋 Hey! Dev here — I’ve added the Forgot password feature in Login page.😎
+                👋 Hey! Dev here — I've updated the watch page UI for better experience!😎
               </p>
 
               <div className="flex justify-between items-center mt-2 text-sm">

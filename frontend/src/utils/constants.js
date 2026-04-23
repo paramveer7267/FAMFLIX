@@ -58,12 +58,29 @@ export const servers = [
 export const updates = [
   {
     version: packageJson.version,
+    // v1.6.0
+    date: "2026-04-24",
+    title: "Watch Page UI Enhancements",
+
+    description:
+      "Improved the watch page UI with better episode selection and layout options for a more enjoyable viewing experience.",
+
+    updates: `
+  • Added improved episode selection.
+  • Implemented layout options for better viewing experience.
+  `,
+
+    bugFixes: `Minor bug fixes and performance improvements.`,
+
+    active: true,
+  },
+  {
+    version: "1.5.0",
     // v1.5.0
     date: "2026-03-22",
     title: "Content Downloadable and more",
 
-    description:
-      "Added Downloadable content, fixed modals in search history",
+    description: "Added Downloadable content, fixed modals in search history",
 
     updates: `
   • Added Downloadable content.
@@ -72,10 +89,10 @@ export const updates = [
 
     bugFixes: `Minor bug fixes.`,
 
-    active: true,
+    active: false,
   },
   {
-    version:"1.4.0",
+    version: "1.4.0",
     // v1.4.0
     date: "2026-03-13",
     title: "Password Recovery + Email Reset System",
