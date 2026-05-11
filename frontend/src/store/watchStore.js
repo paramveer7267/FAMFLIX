@@ -22,6 +22,7 @@ const useWatchStore = create(
             type: data.type,
             season: data.season,
             episode: data.episode,
+            server: data.server,
             updatedAt: new Date().toISOString(),
           },
         };

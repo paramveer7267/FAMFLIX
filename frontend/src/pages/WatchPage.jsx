@@ -46,6 +46,14 @@ const WatchPage = () => {
   }
   const handleServerChange = (newServer) => {
     setServer(newServer);
+
+    if (seasonNumber && episodeNumber) {
+      setData({
+        server: newServer,
+        showSeason: seasonNumber,
+        showEpisode: episodeNumber,
+      });
+    }
   };
   const getVideoSrc = () => {
     const currentServer = servers.find((s) => s.key === server);
@@ -184,9 +192,9 @@ const WatchPage = () => {
       left: sliderRef.current.offsetWidth,
       behavior: "smooth",
     });
-
   //  Episode setter
   function setData(data) {
+    setServer(data.server);
     setSeasonNumber(parseInt(data.showSeason));
     setEpisodeNumber(parseInt(data.showEpisode));
   }
@@ -352,6 +360,7 @@ const WatchPage = () => {
                   id={content.id}
                   onSetData={setData}
                   seasons={content.seasons}
+                  server={server}
                 />
               )}
             </div>

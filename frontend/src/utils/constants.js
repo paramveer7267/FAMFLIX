@@ -30,12 +30,12 @@ export const servers = [
     movieUrl: "https://vidlink.pro/movie/",
     tvUrl: "https://vidlink.pro/tv/",
   },
-  {
-    key: "server4",
-    label: "Server 4",
-    movieUrl: "https://player.autoembed.cc/embed/movie/",
-    tvUrl: "https://player.autoembed.cc/embed/tv/",
-  },
+  // {
+  //   key: "server4",
+  //   label: "Server 4",
+  //   movieUrl: "https://player.autoembed.cc/embed/movie/",
+  //   tvUrl: "https://player.autoembed.cc/embed/tv/",
+  // },
   {
     key: "server5",
     label: "Server 5",
@@ -58,6 +58,24 @@ export const servers = [
 export const updates = [
   {
     version: packageJson.version,
+    // v1.7.0
+    date: "2026-05-11",
+    title: "Watch Page UI Enhancements",
+
+    description:
+      "Now can select server on watch page, added continue watching support for TV shows, and improved episode selection UI for a more enjoyable viewing experience.",
+
+    updates: `
+  • Added server selection option on watch page.
+  • Improved episode selection UI.
+  `,
+
+    bugFixes: `Minor bug fixes and performance improvements.`,
+
+    active: true,
+  },
+  {
+    version: "1.6.0",
     // v1.6.0
     date: "2026-04-24",
     title: "Watch Page UI Enhancements",
@@ -72,7 +90,7 @@ export const updates = [
 
     bugFixes: `Minor bug fixes and performance improvements.`,
 
-    active: true,
+    active: false,
   },
   {
     version: "1.5.0",

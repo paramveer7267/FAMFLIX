@@ -1,45 +1,57 @@
 import React, { useEffect, useState, useRef } from "react";
 import useWatchStore from "../store/watchStore";
+import { servers } from "../utils/constants";
 
-const TvEpisodes = ({ id, onSetData, seasons }) => {
+const TvEpisodes = ({ id, onSetData, seasons, server }) => {
   const { setCurrentWatch, getWatchHistoryById } = useWatchStore();
 
   const [selectedSeason, setSelectedSeason] = useState(null);
   const [selectedEpisode, setSelectedEpisode] = useState("");
   const [viewMode, setViewMode] = useState("grid");
-
   const episodesRef = useRef(null);
 
   // 🔥 Load from history or default
   useEffect(() => {
     const saved = getWatchHistoryById(id);
-
+console.log("Saved watch history for ID", id, ":", saved);
     if (saved && saved.type === "tv") {
       const savedSeason = seasons.find((s) => s.season_number === saved.season);
+
       if (savedSeason) {
         setSelectedSeason(savedSeason);
         setSelectedEpisode(String(saved.episode));
+
+        onSetData({
+          id,
+          showSeason: saved.season,
+          showEpisode: saved.episode,
+          server: saved.server,
+        });
+
         return;
       }
     }
 
     if (seasons?.length > 0) {
-      const firstSeason = seasons.find((s) => s.episode_count > 0);
+      const firstSeason = seasons.find(
+        (s) => s.episode_count > 0 && s.season_number !== 0,
+      );
       if (firstSeason) {
         setSelectedSeason(firstSeason);
         setSelectedEpisode("1");
-
         setCurrentWatch({
           contentId: id,
           type: "tv",
           season: firstSeason.season_number,
           episode: 1,
+          server: servers[0].key,
         });
 
         onSetData({
           id,
           showSeason: firstSeason.season_number,
           showEpisode: 1,
+          server: servers[0].key,
         });
       }
     }
@@ -55,6 +67,7 @@ const TvEpisodes = ({ id, onSetData, seasons }) => {
         id,
         showSeason: sNum,
         showEpisode: eNum,
+        server: server,
       });
 
       setCurrentWatch({
@@ -62,11 +75,12 @@ const TvEpisodes = ({ id, onSetData, seasons }) => {
         type: "tv",
         season: sNum,
         episode: eNum,
+        server: server,
       });
     }
-  }, [selectedSeason, selectedEpisode, id, onSetData, setCurrentWatch]);
+  }, [selectedSeason, selectedEpisode, server, id, onSetData, setCurrentWatch]);
 
-  // 🔥 Scroll to episode
+  // Scroll to episode
   useEffect(() => {
     if (!episodesRef.current || !selectedEpisode) return;
 
@@ -77,7 +91,7 @@ const TvEpisodes = ({ id, onSetData, seasons }) => {
     if (el) {
       el.scrollIntoView({
         behavior: "smooth",
-        block: "center",
+        block: "bottom",
         inline: "center",
       });
     }
@@ -86,19 +100,21 @@ const TvEpisodes = ({ id, onSetData, seasons }) => {
   return (
     <div className="flex flex-col max-w-6xl items-center gap-4">
       {/* 🔥 Seasons */}
-      <div className="flex gap-3 overflow-x-auto whitespace-nowrap no-scrollbar max-w-80 px-1">
+      <div className="flex gap-3 overflow-x-auto whitespace-nowrap scrollbar-hide max-w-80 px-1">
         {seasons
-          ?.filter((s) => s.episode_count > 0)
+          ?.filter((s) => s.episode_count > 0 && s.season_number !== 0)
           .map((season) => (
             <button
               key={season?.id}
               onClick={() => {
                 setSelectedSeason(season);
-                setSelectedEpisode("");
+                setSelectedEpisode("1");
               }}
               className={`flex-shrink-0 px-4 py-3 rounded-lg text-sm transition 
               ${
-                selectedSeason?.id === season.id ? "bg-blue-600" : "bg-gray-600"
+                selectedSeason?.season_number === season.season_number
+                  ? "bg-blue-600"
+                  : "bg-gray-600"
               } text-white`}
             >
               {season?.name}
@@ -159,7 +175,7 @@ const TvEpisodes = ({ id, onSetData, seasons }) => {
                     ? "flex flex-col items-center"
                     : "flex overflow-x-auto whitespace-nowrap"
               }
-              rounded overflow-y-auto max-h-[200px] px-2 py-2 gap-2 min-h-[48px]
+              rounded overflow-y-auto max-h-[200px] px-2 py-6 gap-2 min-h-[48px]
             `}
           >
             {[...Array(selectedSeason.episode_count)].map((_, index) => {
