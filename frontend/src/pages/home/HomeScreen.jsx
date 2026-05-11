@@ -206,7 +206,7 @@ const HomeScreen = () => {
             <div className="flex gap-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory">
               {continueWatching.map((item) => {
                 const localData = watchHistory?.[item.id];
-
+console.log("Rendering continue watching item:", item, "with localData:", localData);
                 return (
                   <Link
                     key={item.id}

@@ -58,7 +58,7 @@ export const servers = [
 export const updates = [
   {
     version: packageJson.version,
-    // v1.7.0
+    // v1.7.1
     date: "2026-05-11",
     title: "Watch Page UI Enhancements",
 
