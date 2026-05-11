@@ -47,11 +47,6 @@ const HomeScreen = () => {
     fetchWatchHistory();
   }, []);
 
-  // FILTER BASED ON PAGE TYPE
-  const continueWatching = watchHistoryData.filter(
-    (item) => item.type === contentType,
-  );
-
   // Splash screen
   React.useEffect(() => {
     if (showSplash) {
@@ -64,7 +59,8 @@ const HomeScreen = () => {
           toastify(
             <div className="text-sm">
               <p className="mb-2">
-                👋 Hey! Dev here — I've added new features! regarding continue watching.😎
+                👋 Hey! Dev here — I've added new features! regarding continue
+                watching.😎
               </p>
 
               <div className="flex justify-between items-center mt-2 text-sm">
@@ -97,10 +93,10 @@ const HomeScreen = () => {
     }
   }, [showSplash]);
   // const handleToggle = (e) => {
-   
-  // if (e.target.checked) 
+
+  // if (e.target.checked)
   // {//     navigate("/anime");//   }// };
-  
+
   if (showSplash) {
     return <SplashScreen onEnd={() => setShowSplash(false)} />;
   }
@@ -183,7 +179,7 @@ const HomeScreen = () => {
         </h2>
 
         {/* CONTINUE WATCHING */}
-        {continueWatching.length > 0 && (
+        {watchHistoryData.length > 0 && (
           <div className="px-5 md:px-20 group">
             {/* HEADER */}
             <div className="flex items-center justify-between mb-5">
@@ -204,9 +200,8 @@ const HomeScreen = () => {
 
             {/* SCROLL CONTAINER */}
             <div className="flex gap-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory">
-              {continueWatching.map((item) => {
+              {watchHistoryData.map((item) => {
                 const localData = watchHistory?.[item.id];
-console.log("Rendering continue watching item:", item, "with localData:", localData);
                 return (
                   <Link
                     key={item.id}
