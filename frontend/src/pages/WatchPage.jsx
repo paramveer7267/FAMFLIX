@@ -264,6 +264,7 @@ const WatchPage = () => {
                   >
                     <ChevronLeft size={24} />
                   </button>
+
                   <button
                     className="bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded disabled:opacity-50"
                     disabled={currTrailersIdx === trailers.length - 1}
@@ -272,13 +273,14 @@ const WatchPage = () => {
                     <ChevronRight size={24} />
                   </button>
                 </div>
+
                 <ReactPlayer
                   controls
                   width="100%"
                   height="90%"
                   className="mx-auto aspect-video rounded-lg overflow-hidden"
                   url={`https://www.youtube.com/embed/${
-                    trailers[currTrailersIdx]?.key || ""
+                    trailers[trailers.length - 1 - currTrailersIdx]?.key || ""
                   }`}
                 />
               </>
